@@ -1,4 +1,11 @@
 package portalgen.placeservice.model.request;
 
-public class UpdatePlaceRequest {
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class UpdatePlaceRequest extends PlaceRequest {
+    private Long id;
 }

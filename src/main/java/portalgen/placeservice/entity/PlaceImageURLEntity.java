@@ -9,7 +9,7 @@ import lombok.Data;
 public class PlaceImageURLEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "place_id")

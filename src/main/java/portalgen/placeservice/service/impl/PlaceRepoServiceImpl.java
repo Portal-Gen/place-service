@@ -8,6 +8,7 @@ import portalgen.placeservice.exception.ResponseException;
 import portalgen.placeservice.repository.PlaceRepository;
 import portalgen.placeservice.service.PlaceRepoService;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,9 +24,23 @@ public class PlaceRepoServiceImpl implements PlaceRepoService {
 
     @Override
     public PlaceEntity findById(Long id) {
+        if (id == null) {
+            throw new ResponseException(BadRequestError.PLACE_NOT_FOUND);
+        }
+
         Optional<PlaceEntity> placeEntity = placeRepository.findById(id);
         if (placeEntity.isPresent()) {
             return placeEntity.get();
+        } else {
+            throw new ResponseException(BadRequestError.PLACE_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public List<PlaceEntity> findByIds(List<Long> ids) {
+        Optional<List<PlaceEntity>> placeEntities = Optional.of(placeRepository.findAllById(ids));
+        if (placeEntities.isPresent()) {
+            return placeEntities.get();
         } else {
             throw new ResponseException(BadRequestError.PLACE_NOT_FOUND);
         }

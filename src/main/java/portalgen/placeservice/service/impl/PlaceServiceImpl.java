@@ -2,7 +2,6 @@ package portalgen.placeservice.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 import portalgen.placeservice.entity.PlaceEntity;
 import portalgen.placeservice.entity.WorldCityEntity;
 import portalgen.placeservice.exception.BadRequestError;
@@ -12,14 +11,13 @@ import portalgen.placeservice.model.enums.PriceLevel;
 import portalgen.placeservice.model.request.PlaceRequest;
 import portalgen.placeservice.model.request.UpdatePlaceRequest;
 import portalgen.placeservice.model.response.PlaceResponse;
-import portalgen.placeservice.repository.PlaceRepository;
-import portalgen.placeservice.repository.WorldCityRepository;
 import portalgen.placeservice.service.PlaceRepoService;
 import portalgen.placeservice.service.PlaceService;
 import portalgen.placeservice.service.WorldCityRepoService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlaceServiceImpl implements PlaceService {
@@ -48,12 +46,37 @@ public class PlaceServiceImpl implements PlaceService {
 
     @Override
     public PlaceResponse getPlace(Long placeId) {
-        return null;
+        PlaceEntity placeEntity = placeRepoService.findById(placeId);
+
+        return mapper.toResponse(placeEntity);
+    }
+
+    @Override
+    public PlaceResponse getPlaceByGooglePlaceId(String googlePlaceId) {
+        PlaceEntity placeEntity = placeRepoService.findByGooglePlaceId(googlePlaceId);
+
+        return mapper.toResponse(placeEntity);
+    }
+
+    @Override
+    public List<PlaceResponse> getPlaces(List<Long> placeIds) {
+        List<PlaceEntity> placeEntities = placeRepoService.findByIds(placeIds);
+        return placeEntities.stream().map(mapper::toResponse).collect(Collectors.toList());
     }
 
     @Override
     public PlaceResponse updatePlace(UpdatePlaceRequest placeRequest) {
-        return null;
+        if (placeRequest.getId() == null) {
+            throw new ResponseException(BadRequestError.PLACE_ID_CANNOT_BE_BLANK);
+        }
+
+        PlaceEntity placeEntity = placeRepoService.findById(placeRequest.getId());
+        placeEntity = mapper.toEntity(placeEntity, placeRequest);
+
+        placeEntity.setUpdatedAt(LocalDateTime.now());
+        placeRepoService.save(placeEntity);
+
+        return mapper.toResponse(placeEntity);
     }
 
     @Override
@@ -67,14 +90,6 @@ public class PlaceServiceImpl implements PlaceService {
             throw new ResponseException(BadRequestError.PLACE_NAME_INVALID);
         }
 
-        if (placeRequest.getLatitude() > 90 || placeRequest.getLatitude() < -90) {
-            throw new ResponseException(BadRequestError.PLACE_LATITUDE_INVALID);
-        }
-
-        if (placeRequest.getLongitude() > 180 || placeRequest.getLongitude() < -180) {
-            throw new ResponseException(BadRequestError.PLACE_LONGITUDE_INVALID);
-        }
-
         if (placeRequest.getWorldCityId() == null) {
             throw new ResponseException(BadRequestError.PLACE_WORLD_CITY_INVALID);
         }
@@ -83,6 +98,17 @@ public class PlaceServiceImpl implements PlaceService {
             throw new ResponseException(BadRequestError.PLACE_GOOGLE_PLACE_ID_INVALID);
         }
 
+        if (PriceLevel.valueOf(placeRequest.getPriceLevel()) == PriceLevel.UNKNOWN) {
+            throw new ResponseException(BadRequestError.PRICE_LEVEL_INVALID);
+        }
+
+        if (placeRequest.getLatitude() > 90 || placeRequest.getLatitude() < -90) {
+            throw new ResponseException(BadRequestError.PLACE_LATITUDE_INVALID);
+        }
+
+        if (placeRequest.getLongitude() > 180 || placeRequest.getLongitude() < -180) {
+            throw new ResponseException(BadRequestError.PLACE_LONGITUDE_INVALID);
+        }
     }
     private void handleCreateRequest(PlaceRequest placeRequest) {
         this.handlePlaceRequest(placeRequest);

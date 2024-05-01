@@ -32,6 +32,7 @@ public enum PriceLevel {
             return priceLevel;
         }
     }
+
     private static void initMapping() {
         mapping = new HashMap<>();
         for (PriceLevel value : values()) {

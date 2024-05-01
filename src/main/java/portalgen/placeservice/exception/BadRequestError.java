@@ -19,6 +19,12 @@ public enum BadRequestError implements ResponseError {
     PLACE_WORLD_CITY_INVALID(156, "Place world city is invalid"),
     PLACE_GOOGLE_PLACE_ID_INVALID(157, "Place google place id is invalid"),
     PLACE_NAME_ALREADY_EXISTS(158, "Place name already exists"),
+    PRICE_LEVEL_INVALID(159, "Price level is invalid"),
+    PLACE_ID_CANNOT_BE_BLANK(160, "Place id cannot be blank"),
+    PLACE_DESCRIPTION_ID_CANNOT_BE_BLANK(161, "Place description id cannot be blank"),
+    PLACE_DESCRIPTION_NOT_FOUND(162, "Place description not found"),
+    PLACE_DESCRIPTION_CANNOT_BE_BLANK(163, "Place description cannot be blank"),
+    PLACE_DESCRIPTION_TOO_LONG(164, "Place description is too long"),
     ;
 
 
