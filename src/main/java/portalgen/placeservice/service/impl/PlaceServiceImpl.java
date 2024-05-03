@@ -98,10 +98,6 @@ public class PlaceServiceImpl implements PlaceService {
             throw new ResponseException(BadRequestError.PLACE_GOOGLE_PLACE_ID_INVALID);
         }
 
-        if (PriceLevel.valueOf(placeRequest.getPriceLevel()) == PriceLevel.UNKNOWN) {
-            throw new ResponseException(BadRequestError.PRICE_LEVEL_INVALID);
-        }
-
         if (placeRequest.getLatitude() > 90 || placeRequest.getLatitude() < -90) {
             throw new ResponseException(BadRequestError.PLACE_LATITUDE_INVALID);
         }
