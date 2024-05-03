@@ -1,5 +1,6 @@
 package portalgen.placeservice.service;
 
+import portalgen.placeservice.model.request.PlaceDescriptionGooglePlaceIdRequest;
 import portalgen.placeservice.model.request.PlaceDescriptionRequest;
 import portalgen.placeservice.model.request.UpdatePlaceDescriptionRequest;
 import portalgen.placeservice.model.response.PlaceDescriptionResponse;
@@ -8,6 +9,8 @@ import java.util.List;
 
 public interface PlaceDescriptionService {
     PlaceDescriptionResponse createPlaceDescription(PlaceDescriptionRequest placeDescriptionRequest);
+
+    PlaceDescriptionResponse createPlaceDescriptionGooglePlaceId(PlaceDescriptionGooglePlaceIdRequest placeDescriptionGooglePlaceIdRequest);
 
     PlaceDescriptionResponse getPlaceDescription(Long placeDescriptionId);
 
