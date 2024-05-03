@@ -2,6 +2,7 @@ package portalgen.placeservice.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import portalgen.placeservice.model.request.PlaceDescriptionGooglePlaceIdRequest;
 import portalgen.placeservice.model.request.PlaceDescriptionRequest;
 import portalgen.placeservice.model.request.UpdatePlaceDescriptionRequest;
 import portalgen.placeservice.model.response.PlaceDescriptionResponse;
@@ -19,6 +20,11 @@ public class PlaceDescriptionController {
     @PostMapping("/place-description")
     public Response<PlaceDescriptionResponse> createPlaceDescription(@RequestBody PlaceDescriptionRequest placeDescriptionRequest) {
         return new Response<>(placeDescriptionService.createPlaceDescription(placeDescriptionRequest));
+    }
+
+    @PostMapping("/place-description/google")
+    public Response<PlaceDescriptionResponse> createPlaceDescriptionGooglePlaceId(@RequestBody PlaceDescriptionGooglePlaceIdRequest placeDescriptionRequest) {
+        return new Response<>(placeDescriptionService.createPlaceDescriptionGooglePlaceId(placeDescriptionRequest));
     }
 
     @GetMapping("/place-description/{placeDescriptionId}")
