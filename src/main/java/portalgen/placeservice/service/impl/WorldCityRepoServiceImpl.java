@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import portalgen.placeservice.entity.WorldCityEntity;
 import portalgen.placeservice.exception.BadRequestError;
 import portalgen.placeservice.exception.ResponseException;
+import portalgen.placeservice.model.request.SearchWorldCityRequest;
 import portalgen.placeservice.repository.WorldCityRepository;
 import portalgen.placeservice.service.WorldCityRepoService;
 
@@ -28,6 +29,17 @@ public class WorldCityRepoServiceImpl implements WorldCityRepoService {
         } else {
             throw new ResponseException(BadRequestError.WORLD_CITY_NOT_FOUND);
         }
+    }
+
+    @Override
+    public WorldCityEntity findIdByCityNameAndCountryName(SearchWorldCityRequest searchWorldCityRequest) {
+        WorldCityEntity worldCity = worldCityRepository.findByCityAndCountry(searchWorldCityRequest.getCity(), searchWorldCityRequest.getCountry());
+
+        if (worldCity == null) {
+            throw new ResponseException(BadRequestError.WORLD_CITY_NOT_FOUND);
+        }
+
+        return worldCity;
     }
 
     @Override
