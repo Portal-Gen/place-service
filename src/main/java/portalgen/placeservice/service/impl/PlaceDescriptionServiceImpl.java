@@ -7,6 +7,7 @@ import portalgen.placeservice.entity.PlaceEntity;
 import portalgen.placeservice.exception.BadRequestError;
 import portalgen.placeservice.exception.ResponseException;
 import portalgen.placeservice.mapper.PlaceDescriptionMapper;
+import portalgen.placeservice.model.request.PlaceDescriptionGooglePlaceIdRequest;
 import portalgen.placeservice.model.request.PlaceDescriptionRequest;
 import portalgen.placeservice.model.request.UpdatePlaceDescriptionRequest;
 import portalgen.placeservice.model.response.PlaceDescriptionResponse;
@@ -34,6 +35,22 @@ public class PlaceDescriptionServiceImpl implements PlaceDescriptionService {
         handlePlaceDescriptionRequest(placeDescriptionRequest);
         PlaceEntity placeEntity = placeRepoService.findById(placeDescriptionRequest.getPlaceId());
         PlaceDescriptionEntity placeDescriptionEntity = mapper.toEntity(placeDescriptionRequest, placeEntity);
+
+        placeDescriptionRepoService.save(placeDescriptionEntity);
+
+        return mapper.toResponse(placeDescriptionEntity);
+    }
+
+    @Override
+    public PlaceDescriptionResponse createPlaceDescriptionGooglePlaceId(PlaceDescriptionGooglePlaceIdRequest placeDescriptionGooglePlaceIdRequest) {
+        PlaceEntity placeEntity = placeRepoService.findByGooglePlaceId(placeDescriptionGooglePlaceIdRequest.getGooglePlaceId());
+        if (placeEntity == null) {
+            throw new ResponseException(BadRequestError.PLACE_NOT_FOUND);
+        }
+
+        PlaceDescriptionEntity placeDescriptionEntity = new PlaceDescriptionEntity();
+        placeDescriptionEntity.setPlace(placeEntity);
+        placeDescriptionEntity.setDescription(placeDescriptionGooglePlaceIdRequest.getDescription());
 
         placeDescriptionRepoService.save(placeDescriptionEntity);
 

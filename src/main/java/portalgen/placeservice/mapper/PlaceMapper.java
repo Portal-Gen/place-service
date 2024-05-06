@@ -33,6 +33,7 @@ public class PlaceMapper {
 
     public PlaceResponse toResponse(PlaceEntity placeEntity) {
         PlaceResponse response = new PlaceResponse();
+        response.setId(placeEntity.getId());
         response.setGooglePlaceId(placeEntity.getGooglePlaceId());
         response.setDisplayName(placeEntity.getDisplayName());
         response.setLatitude(placeEntity.getLatitude());
