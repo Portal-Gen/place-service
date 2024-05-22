@@ -22,25 +22,29 @@ services:
       DB_USER: mysql
       DB_PASSWORD: mysql
     deploy:
-      replicas: 2
+      replicas: 1
     depends_on:
       - db
     networks:
       - place-service-network
 
-  nginx:
+  place-service:
     image: nginx:latest
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "81:81"
+      - "81:80"
     depends_on:
       - service
     networks:
       - place-service-network
+      - shared_network
 
 volumes:
   db_data:
 
 networks:
   place-service-network:
+    driver: bridge
+  shared_network:
+    external: true
